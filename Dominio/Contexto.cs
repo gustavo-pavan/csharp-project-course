@@ -50,5 +50,33 @@ namespace Dominio
                 throw new Exception(ex.Message);
             }
         }
+
+        public SqlDataReader DataReader(CommandType command, string procedure)
+        {
+
+            try
+            {
+                SqlConnection conexao = MinhaConexao();
+                conexao.Open();
+
+                SqlCommand cmd = conexao.CreateCommand();
+
+                cmd.CommandText = procedure;
+                cmd.CommandType = command;
+                cmd.CommandTimeout = 90;
+
+                foreach (SqlParameter parametro in colecao)
+                {
+                    cmd.Parameters.Add(new SqlParameter(parametro.ParameterName, parametro.Value));
+                }
+
+                return cmd.ExecuteReader();
+            }
+            catch (SqlException ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
